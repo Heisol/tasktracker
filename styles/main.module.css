@@ -1,0 +1,35 @@
+.column {
+    box-shadow: 10px 10px rgb(75, 75, 75);
+    background-color: aqua;
+}
+
+#googleSignIn {
+    padding: 10px;
+    cursor: pointer;
+    opacity: 1;
+}
+@keyframes changeOpacity {
+    from{
+        opacityL: 1;
+    }
+    to{
+        opacity: 0.5;
+    }
+}
+#googleSignIn:hover{
+    animation-duration: 1s;
+    animation-name: changeOpacity;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+.opacityChange:hover{
+    animation-duration: 1s;
+    animation-name: changeOpacity;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.googlePhoto {
+    border-radius: 50%;
+}
+

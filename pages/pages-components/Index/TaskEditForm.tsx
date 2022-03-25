@@ -1,0 +1,127 @@
+import { useState } from "react"
+import {Center, Group, TextInput, Badge, ColorSwatch, Textarea, Select, Button, Modal, Drawer} from '@mantine/core'
+import {v4 as uuidv4} from 'uuid'
+import { DatePicker } from '@mantine/dates';
+import 'dayjs/locale/tl-ph'
+import Sentry from "react-activity/dist/Sentry";
+import "react-activity/dist/Sentry.css";
+import { updateDoc, doc } from "firebase/firestore";
+import { db } from "../../../localmodules/firebase";
+
+const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cUser}:any) => {
+
+    const [localFetching, setLocalFetching] = useState<boolean>(false)
+  
+    const [localSelectedTag, setLocalSelectedTag] = useState<number>(0)
+    const [localTitle, setLocalTitle] = useState<string>(task.title)
+    const [localTag, setLocalTag] = useState<Array<string>>(task.tag)
+    const [localTagColor, setLocalTagColor] = useState<Array<string>>(task.tagColor)
+    const [localDeadline, setLocalDeadline] = useState<Date| null>(task.deadline)
+    const [localDetails, setLocalDetails] = useState<string>(task.details)
+    const [localLocation, setLocalLocation] = useState<string>(task.location)
+  
+    const saveTask = () =>{
+      setLocalFetching(true)
+      let newModTask:any = ''
+      let newTask = {
+        title: localTitle,
+        deadline: localDeadline,
+        tag: localTag,
+        tagColor: localTagColor || 'blue',
+        details: localDetails,
+        location: localLocation || '1'
+      }
+      let newTasks = tasks.map((e:any)=>{
+        if (e.docId == task.docId) {
+          let modifiedTask = e
+          modifiedTask.title= newTask.title,
+          modifiedTask.deadline= newTask.deadline,
+          modifiedTask.tag= newTask.tag,
+          modifiedTask.tagColor= newTask.tagColor,
+          modifiedTask.details= newTask.details,
+          modifiedTask.location= newTask.location
+          newModTask = modifiedTask
+          return modifiedTask
+        }
+        return e
+      })
+      updateDoc(doc(db, cUser, task.docId), newTask).then((res)=>{
+        setTasks(newTasks)
+        setDisplayed(false)
+      }).catch(e=>alert(`Error ${e.code}: ${e.message}`))
+      .finally(()=>setLocalFetching(false))
+    }
+
+    return (
+      <>
+          <Modal opened={displayed} onClose={()=>setDisplayed(false)} size='xl' overlayOpacity={0.9}  >
+          <Center>
+              <form onSubmit={(e)=>{
+                saveTask()
+                e.preventDefault()
+              }} >
+              <Group position='center' direction='row'  >
+                <Group position='left' mt='lg' direction='row' >
+                  <TextInput required label="Task Name/Title" placeholder="e.g Attend daily scrum at 11am"
+                  value={localTitle} onChange={e=>setLocalTitle(e.target.value)} />
+                    <TextInput label="Tag" placeholder="Morning routine" value={localTag} onChange={e=>{
+                      if (e.target.value.includes(',')) {
+                        let tags = e.target.value.split(',')
+                        setLocalTag(tags)
+                        return
+                      }
+                      setLocalTag([e.target.value])
+                    }} 
+                    title={`will default to 'Task' when left empty`}/>
+                    
+                        <Group position="center" spacing="xs">
+                          {localTag && localTag.map((e:any, index: number)=>{
+                            return (
+                              <Badge variant='dot' color={localTagColor[index] || 'blue'} key={uuidv4()} 
+                              style={{cursor:'pointer', border: index == localSelectedTag ? '1px solid black' : ''}}
+                              onClick={()=>setLocalSelectedTag(index)}
+                              >{e}</Badge>
+                            )
+                          })}
+                          {theme && Object.keys(theme.colors).map((color) => (
+                            <ColorSwatch key={color} color={theme.colors[color][6]} style={{cursor: 'pointer'}} onClick={()=>{
+                              let tempCopy = localTagColor
+                              tempCopy[localSelectedTag] = color
+                              setLocalTagColor(tempCopy)
+                              let tempSelectedTag = localSelectedTag
+                              setLocalSelectedTag(-1)
+                              setTimeout(()=>setLocalSelectedTag(tempSelectedTag), 250)
+                            }} />
+                          ))}
+                        </Group>
+
+                  </Group>
+                  
+                </Group>
+                <DatePicker placeholder="Optional" label="Deadline" value={localDeadline} onChange={e=>setLocalDeadline(e)}/>
+                <Textarea placeholder="Task details/remarks" label="Details" value={localDetails} onChange={e=>setLocalDetails(e.target.value)} />
+                <Select
+                  label="Add task to"
+                  placeholder="Column"
+                  defaultValue={localLocation}
+                  onChange={(e:any)=>setLocalLocation(e)}
+                  data={[
+                    { value: '1', label: 'Backlogs' },
+                    { value: '2', label: 'Work in progress' },
+                    { value: '3', label: 'Done' },
+                  ]}
+                />
+                <Group position="center" mt="md">
+                  {!localFetching && <>
+                  <Button type="submit" >Save task</Button>
+                  </>}
+                  {localFetching && <Sentry/>}
+                </Group>
+              </form>
+          </Center>
+          </Modal>
+      </>
+    )
+}
+
+export default TaskEditForm
