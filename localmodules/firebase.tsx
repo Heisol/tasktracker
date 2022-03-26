@@ -7,13 +7,21 @@ import { getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAxJL1Z5o9qNryRClchNvsX-yVEk2A_gtw",
+//   authDomain: "tasktracker-d1d48.firebaseapp.com",
+//   projectId: "tasktracker-d1d48",
+//   storageBucket: "tasktracker-d1d48.appspot.com",
+//   messagingSenderId: "259293364929",
+//   appId: "1:259293364929:web:9d1c68632779823c71ca40"
+// };
 const firebaseConfig = {
-  apiKey: "AIzaSyAxJL1Z5o9qNryRClchNvsX-yVEk2A_gtw",
-  authDomain: "tasktracker-d1d48.firebaseapp.com",
-  projectId: "tasktracker-d1d48",
-  storageBucket: "tasktracker-d1d48.appspot.com",
-  messagingSenderId: "259293364929",
-  appId: "1:259293364929:web:9d1c68632779823c71ca40"
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId
 };
 
 // Initialize Firebase
