@@ -12,8 +12,6 @@ import TaskComponent from './pages-components/Index/TaskComponent';
 import {app, db} from '../localmodules/firebase'
 import { addDoc, collection, documentId, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, getAuth, signInWithPopup, setPersistence, browserLocalPersistence, signOut } from "firebase/auth";
-import Sentry from "react-activity/dist/Sentry";
-import "react-activity/dist/Sentry.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus} from '@fortawesome/free-solid-svg-icons'
 
@@ -116,7 +114,8 @@ const Main = () => {
       tag: Array<string>,
       tagColor: Array<string>,
       details: string | undefined | null,
-      location: string
+      location: string,
+      docId: string | undefined | null
     },
     taskArr : Array<types['task']> | null
   }
@@ -131,7 +130,6 @@ const Main = () => {
   const [taskDetails, setTaskDetails] = useState<string>('')
   const [taskLocation, setTaskLocation] = useState<string>('1')
   const [formDisplay, setFormDisplay] = useState<boolean>(false)
-  const [taskDrawerDisplay, setTaskDrawerDisplay] = useState<Array<boolean>>([false])
 
   const addTask = (e:any) =>{
     let task = {
@@ -141,7 +139,8 @@ const Main = () => {
       tag: taskTag,
       tagColor: taskTagColor || 'blue',
       details: taskDetails,
-      location: taskLocation || '1'
+      location: taskLocation || '1',
+      docId: ''
     }
     if (!cUser) return
     setFetching(true)
@@ -178,7 +177,6 @@ const Main = () => {
       header={<Header height={100} p="lg" className='bg-dark text-light' >Task Tracker</Header>}
       navbar={<Navbar width={{ base: 200 }} height={''} p="lg">{
         <>
-          {fetching && <Navbar.Section> <Group position='center' ><Sentry/></Group> </Navbar.Section>}
           <Navbar.Section mt='lg' className='align-items-center d-flex flex-row justify-content-center' id={`${styles['googleSignIn']}`}>
             {(!cUser) && 
               <Button variant='outline' onClick={signIn} disabled={fetching} >

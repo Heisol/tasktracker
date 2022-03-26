@@ -2,12 +2,12 @@ import { Drawer, Paper, Group, Text, Badge } from "@mantine/core"
 import { v4 as uuidv4 } from "uuid"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit} from '@fortawesome/free-solid-svg-icons'
-import { useState } from "react"
 
-const TaskDrawer = ({task, tasks, setTasks,drawerDisplay, setDrawerDisplay}:any) => {
+const TaskDrawer = ({task,drawerDisplay, setDrawerDisplay}:any) => {
 
   return (
-    <Drawer
+    <>
+    {task && <Drawer
         opened={drawerDisplay}
         onClose={() =>setDrawerDisplay(false)}
         padding="xl"
@@ -28,7 +28,8 @@ const TaskDrawer = ({task, tasks, setTasks,drawerDisplay, setDrawerDisplay}:any)
             </Group>
             <Text>{task.details}</Text>
         </Paper>
-    </Drawer>
+    </Drawer>}
+    </>
   )
 }
 

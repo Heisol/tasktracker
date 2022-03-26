@@ -6,7 +6,21 @@ import { db } from '../../../localmodules/firebase'
 import { deleteDoc, doc } from 'firebase/firestore'
 import TaskEditForm from './TaskEditForm'
 
-const TaskComponent = ({e, tasks, setTasks, theme, cUser}:any) =>{
+interface types {
+task : {
+  title: string,
+  dateCreated: Date,
+  deadline: string | undefined | null| Date,
+  tag: Array<string>,
+  tagColor: Array<string>,
+  details: string | undefined | null,
+  location: string,
+  docId: string | undefined | null
+},
+taskArr : Array<types['task']> | null
+}
+
+const TaskComponent = ({e, tasks, setTasks, theme, cUser}:{e: types['task'], tasks: types['taskArr'], setTasks: Function, theme: any, cUser: string}) =>{
 
   const [drawerDisplay, setDrawerDisplay] = useState<boolean>(false)
   const [popoverDisplay, setPopoverDisplay] = useState<boolean>(false)
@@ -22,7 +36,7 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:any) =>{
         return
       })
     }
-    const newTasks = tasks.filter((task:any)=>task!==e)
+    const newTasks = tasks && tasks.filter((task:any)=>task!==e)
     setTasks(newTasks)
   }
 
@@ -30,7 +44,7 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:any) =>{
     if (e.docId) {
       
     }
-    const newTasks = tasks.map((task:any)=>{
+    const newTasks = tasks && tasks.map((task:any)=>{
       if (task == e) {
         let newTask = task
         console.log(task.location)
@@ -44,8 +58,8 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:any) =>{
   }
  
   return (<>
-  <Paper key={uuidv4()} className='mb-2' shadow="xl" radius="xl" p="md">
-      <TaskDrawer task={e} drawerDisplay={drawerDisplay} setDrawerDisplay={setDrawerDisplay}  tasks={tasks} setTasks={setTasks} />
+  {e && <Paper key={uuidv4()} className='mb-2' shadow="xl" radius="xl" p="md">
+      <TaskDrawer task={e} drawerDisplay={drawerDisplay} setDrawerDisplay={setDrawerDisplay}/>
       <TaskEditForm task={e} tasks={tasks} setTasks={setTasks} theme={theme} displayed={displayEdit} setDisplayed={setDisplayEdit} cUser={cUser} />
       <Group position='apart' className='mx-3' >
         <Text color={'cyan'} >{e.title}</Text>
@@ -98,7 +112,7 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:any) =>{
             {e.details.length > 20 &&<span className='text-info' style={{cursor:'pointer'}} onClick={()=>setDrawerDisplay(true)}>See more</span>}
         </Accordion.Item>
       </Accordion>}
-  </Paper>
+  </Paper>}
   <Divider my="sm" variant='dashed' />
   </>
   )

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {Center, Group, TextInput, Badge, ColorSwatch, Textarea, Select, Button, Modal, Drawer} from '@mantine/core'
 import {v4 as uuidv4} from 'uuid'
 import { DatePicker } from '@mantine/dates';
@@ -10,15 +10,28 @@ import { db } from "../../../localmodules/firebase";
 
 const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cUser}:any) => {
 
+  const [ready, setReady] = useState<boolean>(false)
+
     const [localFetching, setLocalFetching] = useState<boolean>(false)
   
     const [localSelectedTag, setLocalSelectedTag] = useState<number>(0)
-    const [localTitle, setLocalTitle] = useState<string>(task.title)
-    const [localTag, setLocalTag] = useState<Array<string>>(task.tag)
-    const [localTagColor, setLocalTagColor] = useState<Array<string>>(task.tagColor)
-    const [localDeadline, setLocalDeadline] = useState<Date| null>(task.deadline)
-    const [localDetails, setLocalDetails] = useState<string>(task.details)
-    const [localLocation, setLocalLocation] = useState<string>(task.location)
+    const [localTitle, setLocalTitle] = useState<string|undefined>()
+    const [localTag, setLocalTag] = useState<Array<string>|undefined>()
+    const [localTagColor, setLocalTagColor] = useState<Array<string>|undefined>()
+    const [localDeadline, setLocalDeadline] = useState<Date| null|undefined>()
+    const [localDetails, setLocalDetails] = useState<string|undefined>()
+    const [localLocation, setLocalLocation] = useState<string|undefined>()
+
+    useEffect(()=>{
+      setLocalTitle(task.title)
+      setLocalTag(task.tag)
+      setLocalTagColor(task.tagColor)
+      setLocalDeadline(task.deadline)
+      setLocalDetails(task.details)
+      setLocalLocation(task.location)
+      setReady(true)
+    }, [task])
+
   
     const saveTask = () =>{
       setLocalFetching(true)
@@ -54,6 +67,7 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
 
     return (
       <>
+          {ready && <>
           <Modal opened={displayed} onClose={()=>setDisplayed(false)} size='xl' overlayOpacity={0.9}  >
           <Center>
               <form onSubmit={(e)=>{
@@ -71,21 +85,22 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
                         return
                       }
                       setLocalTag([e.target.value])
-                    }} 
-                    title={`will default to 'Task' when left empty`}/>
+                    }} />
                     
                         <Group position="center" spacing="xs">
                           {localTag && localTag.map((e:any, index: number)=>{
                             return (
+                              //@ts-ignore
                               <Badge variant='dot' color={localTagColor[index] || 'blue'} key={uuidv4()} 
                               style={{cursor:'pointer', border: index == localSelectedTag ? '1px solid black' : ''}}
                               onClick={()=>setLocalSelectedTag(index)}
                               >{e}</Badge>
                             )
                           })}
-                          {theme && Object.keys(theme.colors).map((color) => (
+                          {(theme && ready) && Object.keys(theme.colors).map((color) => (
                             <ColorSwatch key={color} color={theme.colors[color][6]} style={{cursor: 'pointer'}} onClick={()=>{
                               let tempCopy = localTagColor
+                              //@ts-ignore
                               tempCopy[localSelectedTag] = color
                               setLocalTagColor(tempCopy)
                               let tempSelectedTag = localSelectedTag
@@ -120,6 +135,7 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
               </form>
           </Center>
           </Modal>
+          </>}
       </>
     )
 }
