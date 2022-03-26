@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {Group, Text, Badge, Accordion, Paper, Divider, Burger, Popover, Button, Select} from '@mantine/core'
-import { TaskDrawer } from './TaskDrawer'
+import TaskDrawer from './TaskDrawer'
 import { useState } from 'react'
 import { db } from '../../../localmodules/firebase'
 import { deleteDoc, doc } from 'firebase/firestore'

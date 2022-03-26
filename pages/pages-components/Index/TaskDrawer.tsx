@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit} from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
 
-export const TaskDrawer = ({task, tasks, setTasks,drawerDisplay, setDrawerDisplay}:any) => {
+const TaskDrawer = ({task, tasks, setTasks,drawerDisplay, setDrawerDisplay}:any) => {
 
   return (
     <Drawer
@@ -31,3 +31,5 @@ export const TaskDrawer = ({task, tasks, setTasks,drawerDisplay, setDrawerDispla
     </Drawer>
   )
 }
+
+export default TaskDrawer
