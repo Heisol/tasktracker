@@ -2,6 +2,10 @@ import { Drawer, Paper, Group, Text, Badge } from "@mantine/core"
 import { v4 as uuidv4 } from "uuid"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit} from '@fortawesome/free-solid-svg-icons'
+import dynamic from 'next/dynamic'
+const RichTextEditor = dynamic(() => import('@mantine/rte'), {
+  ssr: false,
+})
 
 const TaskDrawer = ({task,drawerDisplay, setDrawerDisplay}:any) => {
 
@@ -26,7 +30,7 @@ const TaskDrawer = ({task,drawerDisplay, setDrawerDisplay}:any) => {
                 </Badge>)
             })}
             </Group>
-            <Text>{task.details}</Text>
+            <RichTextEditor value={task.details} onChange={()=>{}} readOnly/>
         </Paper>
     </Drawer>}
     </>

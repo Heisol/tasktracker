@@ -5,6 +5,10 @@ import { DatePicker } from '@mantine/dates';
 import 'dayjs/locale/tl-ph'
 import Sentry from "react-activity/dist/Sentry";
 import "react-activity/dist/Sentry.css";
+import dynamic from 'next/dynamic'
+const RichTextEditor = dynamic(() => import('@mantine/rte'), {
+  ssr: false,
+})
 
 const TaskForm = ({formDisplay, taskTitle, setTaskTitle, taskTag, setTaskTag, taskTagColor, 
     setTaskTagColor, deadline, setDeadline, taskDetails, setTaskDetails, addTask, clearFields
@@ -55,7 +59,13 @@ const TaskForm = ({formDisplay, taskTitle, setTaskTitle, taskTag, setTaskTag, ta
                   
                 </Group>
                 <DatePicker placeholder="Optional" label="Deadline" value={deadline} onChange={e=>setDeadline(e)}/>
-                <Textarea placeholder="Task details/remarks" label="Details" value={taskDetails} onChange={e=>setTaskDetails(e.target.value)} />
+                {/* <Textarea placeholder="Task details/remarks" label="Details" value={taskDetails} onChange={e=>setTaskDetails(e.target.value)} /> */}
+                <RichTextEditor value={taskDetails} onChange={e=>setTaskDetails(e)} controls={[
+                  ['bold', 'italic', 'underline', 'link', 'strike', 'blockquote', 'code', 'codeBlock','clean'],
+                  ['unorderedList'],
+                  ['sup', 'sub'],
+                  ['alignLeft', 'alignCenter', 'alignRight'],
+                ]}  />
                 <Select
                   label="Add task to"
                   placeholder="Column"

@@ -7,6 +7,11 @@ import Sentry from "react-activity/dist/Sentry";
 import "react-activity/dist/Sentry.css";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../../localmodules/firebase";
+import dynamic from 'next/dynamic'
+const RichTextEditor = dynamic(() => import('@mantine/rte'), {
+  ssr: false,
+})
+
 
 const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cUser}:any) => {
 
@@ -19,7 +24,7 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
     const [localTag, setLocalTag] = useState<Array<string>|undefined>()
     const [localTagColor, setLocalTagColor] = useState<Array<string>|undefined>()
     const [localDeadline, setLocalDeadline] = useState<Date| null|undefined>()
-    const [localDetails, setLocalDetails] = useState<string|undefined>()
+    const [localDetails, setLocalDetails] = useState<string>('')
     const [localLocation, setLocalLocation] = useState<string|undefined>()
 
     useEffect(()=>{
@@ -114,7 +119,14 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
                   
                 </Group>
                 <DatePicker placeholder="Optional" label="Deadline" value={localDeadline} onChange={e=>setLocalDeadline(e)}/>
-                <Textarea placeholder="Task details/remarks" label="Details" value={localDetails} onChange={e=>setLocalDetails(e.target.value)} />
+                {/* <Textarea placeholder="Task details/remarks" label="Details" value={localDetails} onChange={e=>setLocalDetails(e.target.value)} /> */}
+                {/* <RichTextEditor value={localDetails} onChange={e=>setLocalDetails(e)} controls={[
+                  ['bold', 'italic', 'underline', 'link', 'strike', 'blockquote', 'code', 'codeBlock','clean'],
+                  ['unorderedList'],
+                  ['sup', 'sub'],
+                  ['alignLeft', 'alignCenter', 'alignRight'],
+                ]}  /> */}
+                <RichTextEditor value={localDetails} onChange={e=>setLocalDetails(e)}/>
                 <Select
                   label="Add task to"
                   placeholder="Column"
@@ -128,7 +140,7 @@ const TaskEditForm = ({task, tasks, setTasks, theme ,displayed, setDisplayed, cU
                 />
                 <Group position="center" mt="md">
                   {!localFetching && <>
-                  <Button type="submit" >Save task</Button>
+                  <Button onClick={saveTask} >Save task</Button>
                   </>}
                   {localFetching && <Sentry/>}
                 </Group>

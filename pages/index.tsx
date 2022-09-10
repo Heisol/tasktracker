@@ -15,7 +15,6 @@ import { GoogleAuthProvider, getAuth, signInWithPopup, setPersistence, browserLo
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus} from '@fortawesome/free-solid-svg-icons'
 
-
 const Home: NextPage = () => {
   return (
     <>
@@ -174,7 +173,9 @@ const Main = () => {
   return (
     <AppShell
       padding="lg"
-      header={<Header height={100} p="lg" className='bg-dark text-light' >Task Tracker</Header>}
+      header={<Header height={100} p="lg" className='bg-dark text-light' >
+        Task Tracker
+      </Header>}
       navbar={<Navbar width={{ base: 200 }} height={''} p="lg">{
         <>
           <Navbar.Section mt='lg' className='align-items-center d-flex flex-row justify-content-center' id={`${styles['googleSignIn']}`}>
@@ -221,7 +222,7 @@ const Main = () => {
                       if (fetching) return
                       setFormDisplay(!formDisplay)
                       setTaskLocation('1')
-                    }} />
+                    }} style={{cursor: 'pointer'}}/>
                   </Group>
                 </Card.Section>
               </Card>
@@ -248,7 +249,7 @@ const Main = () => {
                       if (fetching) return
                       setFormDisplay(!formDisplay)
                       setTaskLocation('2')
-                    }} />
+                    }} style={{cursor: 'pointer'}} />
                   </Group>
                 </Card.Section>
               </Card>
@@ -275,7 +276,7 @@ const Main = () => {
                       if (fetching) return
                       setFormDisplay(!formDisplay)
                       setTaskLocation('3')
-                    }} />
+                    }} style={{cursor: 'pointer'}}/>
                   </Group>
                 </Card.Section>
               </Card>

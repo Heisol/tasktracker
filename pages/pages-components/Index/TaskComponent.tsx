@@ -5,6 +5,10 @@ import { useState } from 'react'
 import { db } from '../../../localmodules/firebase'
 import { deleteDoc, doc } from 'firebase/firestore'
 import TaskEditForm from './TaskEditForm'
+import dynamic from 'next/dynamic'
+const RichTextEditor = dynamic(() => import('@mantine/rte'), {
+  ssr: false,
+})
 
 interface types {
 task : {
@@ -108,8 +112,9 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:{e: types['task'], tas
       </Group>
       {e.details && <Accordion iconPosition='right' >
         <Accordion.Item label='Details' >
-          <Text lineClamp={8} >{e.details}</Text>
-            {e.details.length > 20 &&<span className='text-info' style={{cursor:'pointer'}} onClick={()=>setDrawerDisplay(true)}>See more</span>}
+          <RichTextEditor value={e.details} onChange={()=>{}} readOnly style={{maxHeight: '50vh', overflow: 'hidden'}} />
+            {e.details.length > 100 &&<span className='text-info' style={{cursor:'pointer'}} onClick={()=>setDrawerDisplay(true)}>See more</span>}
+            {/* replace with markdown */}
         </Accordion.Item>
       </Accordion>}
   </Paper>}
