@@ -172,13 +172,13 @@ const Main = () => {
 
   return (
     <AppShell
-      padding="lg"
+      padding="sm"
       header={<Header height={100} p="lg" className='bg-dark text-light' >
-        Task Tracker
-      </Header>}
-      navbar={<Navbar width={{ base: 200 }} height={''} p="lg">{
-        <>
-          <Navbar.Section mt='lg' className='align-items-center d-flex flex-row justify-content-center' id={`${styles['googleSignIn']}`}>
+        <Group position='apart' >
+          <Text style={{fontFamily: 'Lucida Console, Courier New, monospace'}} >
+            Task Tracker
+          </Text>
+          <Group position='right' >
             {(!cUser) && 
               <Button variant='outline' onClick={signIn} disabled={fetching} >
                 <Group direction='row'>Sign in<Image src={googleLogo} layout={'fixed'} alt='Google Logo'></Image></Group>
@@ -187,17 +187,14 @@ const Main = () => {
             {(cUser&&userDetails) && 
               <Group onClick={clickSignOut} className='btn-dark btn d-flex flex-row' direction='row' position='center'>Sign Out <Image className={styles.googlePhoto} height={30} width={30} src={userDetails.photoUrl} alt="User image" /> </Group>
             }
-          </Navbar.Section>
-          {!formDisplay && <Navbar.Section grow mt='lg' className='justify-content-center d-flex flex-row'>
-            <Navbar.Section mt='lg' >
+            {!formDisplay && 
               <Button disabled={!cUser || fetching} style={{width: '100px'}} className={`btn btn-primary ${styles['opacityChange']}`} onClick={()=>setFormDisplay(!formDisplay)} >{fetching ? '' : 'Add task'}</Button>
-            </Navbar.Section>
-          </Navbar.Section>}
-        </>
-      }</Navbar>}
-      
+            }
+          </Group>
+        </Group>
+      </Header>}
       styles={(theme) => ({
-        main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[4] },
+        main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : 'white' },
       })}
     >
       <Center>

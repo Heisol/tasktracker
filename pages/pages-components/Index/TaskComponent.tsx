@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid'
-import {Group, Text, Badge, Accordion, Paper, Divider, Burger, Popover, Button, Select} from '@mantine/core'
+import {Group, Text, Badge, Accordion, Paper, Burger, Popover, Button, Select, Divider} from '@mantine/core'
 import TaskDrawer from './TaskDrawer'
 import { useState } from 'react'
 import { db } from '../../../localmodules/firebase'
@@ -62,7 +62,7 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:{e: types['task'], tas
   }
  
   return (<>
-  {e && <Paper key={uuidv4()} className='mb-2' shadow="xl" radius="xl" p="md">
+  {e && <Paper key={uuidv4()} className='mb-2' shadow="xl" radius="xl" p={'md'} style={{borderBottom: '1px groove skyblue', borderTop: '1px groove skyblue'}} >
       <TaskDrawer task={e} drawerDisplay={drawerDisplay} setDrawerDisplay={setDrawerDisplay}/>
       <TaskEditForm task={e} tasks={tasks} setTasks={setTasks} theme={theme} displayed={displayEdit} setDisplayed={setDisplayEdit} cUser={cUser} />
       <Group position='apart' className='mx-3' >
@@ -110,15 +110,12 @@ const TaskComponent = ({e, tasks, setTasks, theme, cUser}:{e: types['task'], tas
           </Badge>)
         })}
       </Group>
-      {e.details && <Accordion iconPosition='right' >
-        <Accordion.Item label='Details' >
-          <RichTextEditor value={e.details} onChange={()=>{}} readOnly style={{maxHeight: '50vh', overflow: 'hidden'}} />
-            {e.details.length > 100 &&<span className='text-info' style={{cursor:'pointer'}} onClick={()=>setDrawerDisplay(true)}>See more</span>}
-            {/* replace with markdown */}
-        </Accordion.Item>
-      </Accordion>}
+      {e.details && <>
+        <RichTextEditor value={e.details} onChange={()=>{}} readOnly style={{maxHeight: '50vh', overflow: 'hidden', border: 'none'}}  />
+        {e.details.length > 100 &&<span className='text-info' style={{cursor:'pointer'}} onClick={()=>setDrawerDisplay(true)}>See more</span>}
+      </>}
   </Paper>}
-  <Divider my="sm" variant='dashed' />
+  <Divider my="sm" color={'white'} />
   </>
   )
 }
